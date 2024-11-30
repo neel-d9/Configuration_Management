@@ -29,6 +29,22 @@
                 <option value="completed" <?php if (isset($_GET['completion_status']) && $_GET['completion_status'] == 'completed') echo 'selected'; ?>>Completed</option>
             </select>
 
+            <label for="cr_type">Type:</label>
+            <select name="cr_type" id="cr_type">
+                <option value="">All</option>
+                <option value="bug" <?php if (isset($_GET['cr_type']) && $_GET['cr_type'] == 'bug') echo 'selected'; ?>>Bug</option>
+                <option value="feature" <?php if (isset($_GET['cr_type']) && $_GET['cr_type'] == 'feature') echo 'selected'; ?>>Feature</option>
+                <option value="improvement" <?php if (isset($_GET['cr_type']) && $_GET['cr_type'] == 'improvement') echo 'selected'; ?>>Improvement</option>
+            </select>
+
+            <label for="cr_priority">Priority:</label>
+            <select name="cr_priority" id="cr_priority">
+                <option value="">All</option>
+                <option value="low" <?php if (isset($_GET['cr_priority']) && $_GET['cr_priority'] == 'low') echo 'selected'; ?>>Low</option>
+                <option value="medium" <?php if (isset($_GET['cr_priority']) && $_GET['cr_priority'] == 'medium') echo 'selected'; ?>>Medium</option>
+                <option value="high" <?php if (isset($_GET['cr_priority']) && $_GET['cr_priority'] == 'high') echo 'selected'; ?>>High</option>
+            </select>
+
             <button type="submit">Filter</button>
         </form>
 
@@ -44,7 +60,8 @@
                     <th>Assign Time</th>
                     <th>Assigned To</th>
                     <th>Completion Status</th>
-                    <th>Labels</th>
+                    <th>Type</th>
+                    <th>Priority</th>
                 </tr>
             </thead>
             <tbody>
@@ -59,36 +76,50 @@
                 }
 
                 // Add completion status filter if set
-                if (isset($_GET['completion_status']) && $_GET['completion_status'] != '') {
-                    $completion_status = $conn->real_escape_string($_GET['completion_status']);
-                    $sql .= " AND completion_status = '$completion_status'";
-                }
-
-                $result = $conn->query($sql);
-
-                if ($result->num_rows > 0) {
-                    // Output data of each row
-                    while($row = $result->fetch_assoc()) {
-                        echo "<tr>
-                                <td>{$row['id']}</td>
-                                <td>{$row['title']}</td>
-                                <td>{$row['description']}</td>
-                                <td>{$row['raised_by']}</td>
-                                <td>{$row['raise_time']}</td>
-                                <td>{$row['status']}</td>
-                                <td>{$row['assign_time']}</td>
-                                <td>{$row['assigned_to']}</td>
-                                <td>{$row['completion_status']}</td>
-                                <td>{$row['labels']}</td>
-                              </tr>";
-                    }
-                } else {
-                    echo "<tr><td colspan='10'>No records found</td></tr>";
-                }
-                $conn->close();
-                ?>
-            </tbody>
-        </table>
-    </div>
-</body>
-</html>
+                                // Add completion status filter if set
+                                if (isset($_GET['completion_status']) && $_GET['completion_status'] != '') {
+                                    $completion_status = $conn->real_escape_string($_GET['completion_status']);
+                                    $sql .= " AND completion_status = '$completion_status'";
+                                }
+                
+                                // Add cr_type filter if set
+                                if (isset($_GET['cr_type']) && $_GET['cr_type'] != '') {
+                                    $cr_type = $conn->real_escape_string($_GET['cr_type']);
+                                    $sql .= " AND cr_type = '$cr_type'";
+                                }
+                
+                                // Add cr_priority filter if set
+                                if (isset($_GET['cr_priority']) && $_GET['cr_priority'] != '') {
+                                    $cr_priority = $conn->real_escape_string($_GET['cr_priority']);
+                                    $sql .= " AND cr_priority = '$cr_priority'";
+                                }
+                
+                                $result = $conn->query($sql);
+                
+                                if ($result->num_rows > 0) {
+                                    // Output data of each row
+                                    while($row = $result->fetch_assoc()) {
+                                        echo "<tr>
+                                                <td>{$row['id']}</td>
+                                                <td>{$row['title']}</td>
+                                                <td>{$row['description']}</td>
+                                                <td>{$row['raised_by']}</td>
+                                                <td>{$row['raise_time']}</td>
+                                                <td>{$row['status']}</td>
+                                                <td>{$row['assign_time']}</td>
+                                                <td>{$row['assigned_to']}</td>
+                                                <td>{$row['completion_status']}</td>
+                                                <td>{$row['cr_type']}</td>
+                                                <td>{$row['cr_priority']}</td>
+                                              </tr>";
+                                    }
+                                } else {
+                                    echo "<tr><td colspan='11'>No records found</td></tr>";
+                                }
+                                $conn->close();
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </body>
+                </html>
