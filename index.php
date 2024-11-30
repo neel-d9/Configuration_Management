@@ -11,7 +11,7 @@
 </head>
 
 <body>
-    <div  class="login-form-container">
+    <div class="login-form-container">
         <h1 class="form-title">Alpine Technologies</h1>
         <div class="container" id="signIn">
             <h1 class="form-title">Sign In</h1>
@@ -20,10 +20,12 @@
                     <i class="fa-solid fa-user"></i>
                     <input type="username" name="username" id="username" placeholder="Username" required>
                 </div>
+                <br>
                 <div class="input-group">
                     <i class="fas fa-lock"></i>
                     <input type="password" name="password" id="password" placeholder="Password" required>
                 </div>
+                <br>
                 <input type="submit" class="btn" value="Sign In" name="signIn">
             </form>
         </div>

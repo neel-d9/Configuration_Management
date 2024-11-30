@@ -2,22 +2,21 @@
 
 include 'connect.php';
 
-//if(!isset($_SESSION[]))
+session_start();
+if (!isset($_SESSION['username'])) {
+    header("Location: index.php");
+    exit;
+}
 
 if (isset($_POST['raiseCR'])) {
     $title = $_POST['title'];
     $desc = $_POST['description'];
-    /*
-    $type = $_POST['cr_type'];
-    */
-    session_start();
-    if (!isset($_SESSION['username'])) {
-        header("Location: index.php");
-        exit;
-    }
+    $type = $_POST['type'];
     $raised_by = $_SESSION['username'];
-    $sql = "INSERT INTO crs (title, description, raised_by) VALUES ('$title', '$desc', '$raised_by')";
+    $sql = "INSERT INTO crs (title, description, raised_by, cr_type) VALUES ('$title', '$desc', '$raised_by', '$type')";
     $conn->query($sql);
+    header("Location: raisecr.php");
+    exit;
 }
 ?>
 
@@ -42,27 +41,27 @@ if (isset($_POST['raiseCR'])) {
 <body>
     <div class="container" id="raiseCR">
         <h1 class="form-title">Raise CR</h1>
-        <form method="post" action="raisecr.php"> <!-- raisecr php -->
+        <form method="post" action=""> 
             <div class="input-group">
                 <i class="fa-solid fa-user"></i>
                 <input type="title" name="title" id="title" placeholder="Title" required>
 
             </div>
+            <br>
             <div class="input-group">
                 <i class="fas fa-lock"></i>
                 <input type="description" name="description" id="description" placeholder="Description" required>
 
             </div>
-            <div class="dropdown">
-                <div class="dropdown-trigger">CR types</div>
-                <div class="dropdown-content">
-                    <a href="#" data-value="bug">Bug</a>
-                    <a href="#" data-value="feature">Feature</a>
-                    <a href="#" data-value="improvement">Improvement</a>
-                </div>
-            </div>
-            <input type="hidden" name="cr_type" id="cr_type" value="">
-
+            <br>
+            <select name="type" id="type" required>
+                <option value="" disabled selected>Change Request Type</option>
+                <option value="bug" <?php if (isset($_POST['type']) && $_POST['type'] == 'bug') echo 'selected'; ?>>Bug</option>
+                <option value="feature" <?php if (isset($_POST['type']) && $_POST['type'] == 'feature') echo 'selected'; ?>>Feature</option>
+                <option value="improvement" <?php if (isset($_POST['type']) && $_POST['type'] == 'improvement') echo 'selected'; ?>>Improvement</option>
+            </select>
+            <br>
+            <br>
             <input type="submit" class="btn" value="Raise CR" name="raiseCR">
         </form>
 
