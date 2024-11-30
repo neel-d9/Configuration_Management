@@ -1,7 +1,12 @@
-SE Project for Group 2: Configuration Management System
+# SE Project for Group 2: Configuration Management System
 
-Members:
+
+## Members:
+
 Arkopravo Saha
+
 Diptoneel De
+
 Srijan Saha
+
 Sauradeep Sikdar
