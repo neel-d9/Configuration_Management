@@ -49,8 +49,8 @@ $userRole = isset($_SESSION['role']) && isset($roleMapping[$_SESSION['role']])
       <span><?php echo $_SESSION['username']; ?></span>
       <p class="job"><?php echo $userRole; ?></p>
       <?php if ($userRole=="Configuration Manager"): ?>
-        <a href="assigncr.php">
-          <button>Assign CR</button>
+        <a href="managecr.php">
+          <button>Manage CR</button>
         </a>
       <?php endif; ?>
       <?php if ($userRole=="Developer"): ?>
@@ -63,12 +63,6 @@ $userRole = isset($_SESSION['role']) && isset($roleMapping[$_SESSION['role']])
           <button>Raise New CR</button>
         </a>
       <?php endif; ?>
-    </div>
-    <div style="text-align:center; padding:15%;">
-      <a href="logout.php">Logout</a>
-      <br>
-      <br>
-      <a href="raisecr.php">Raise Change Request</a>
     </div>
 </body>
 </html>
