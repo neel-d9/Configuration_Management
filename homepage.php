@@ -36,7 +36,9 @@ $userRole = isset($_SESSION['role']) && isset($roleMapping[$_SESSION['role']])
         <div class="nav-buttons">
             <button onclick="alert('Button 1 clicked')">1</button>
             <button onclick="alert('Button 2 clicked')">2</button>
-            <button onclick="alert('Button 3 clicked')">3</button>
+            <a href="logout.php">
+              <button>Logout</button>
+            </a>
         </div>
     </div>
     <div class="card">
@@ -46,8 +48,21 @@ $userRole = isset($_SESSION['role']) && isset($roleMapping[$_SESSION['role']])
       </div>
       <span><?php echo $_SESSION['username']; ?></span>
       <p class="job"><?php echo $userRole; ?></p>
-      <button> Click
-      </button>
+      <?php if ($userRole=="Configuration Manager"): ?>
+        <a href="assigncr.php">
+          <button>Assign CR</button>
+        </a>
+      <?php endif; ?>
+      <?php if ($userRole=="Developer"): ?>
+        <a href="checkcr.php">
+          <button>Check assigned CR</button>
+        </a>
+      <?php endif; ?>
+      <?php if ($userRole=="Developer" || $userRole=="Customer Support"): ?>
+        <a href="raisecr.php">
+          <button>Raise New CR</button>
+        </a>
+      <?php endif; ?>
     </div>
     <div style="text-align:center; padding:15%;">
       <a href="logout.php">Logout</a>
