@@ -11,13 +11,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $crId = $_POST['id'];
     $devteam = $_POST['team'];
     $cr_priority = $_POST['cr_priority'];
-    $stmt = $conn->prepare("UPDATE crs SET assigned_to = ?, cr_priority = ? WHERE id = ?");
+    $stmt = $conn->prepare("UPDATE crs SET status = 'assigned', assigned_to = ?, cr_priority = ? WHERE id = ?");
     $stmt->bind_param('ssi', $devteam, $cr_priority, $crId);
+    $stmt->execute();
     $stmt->close();
 }
 
 // Fetch all CRs from the database
-$result = $conn->query("SELECT id, title, description, assigned_to, cr_priority FROM crs");
+$result = $conn->query("SELECT id, title, description, assigned_to, cr_priority FROM crs WHERE status='unassigned'");
 $crs = $result->fetch_all(MYSQLI_ASSOC);
 $result->close();
 
@@ -26,6 +27,7 @@ $devqueries = $conn->query("SELECT username FROM users WHERE role = 'developer'"
 while ($row = $devqueries->fetch_assoc()) {
     $devteams[] = $row['username'];
 }
+$devqueries->close();
 ?>
 
 <!DOCTYPE html>
