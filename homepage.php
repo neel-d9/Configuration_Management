@@ -1,5 +1,9 @@
 <?php
 session_start();
+if (!isset($_SESSION['username'])) {
+    header("Location: index.php");
+    exit;
+}
 include("connect.php");
 
 $roleMapping = [
@@ -32,7 +36,9 @@ $userRole = isset($_SESSION['role']) && isset($roleMapping[$_SESSION['role']])
         <div class="nav-buttons">
             <button onclick="alert('Button 1 clicked')">1</button>
             <button onclick="alert('Button 2 clicked')">2</button>
-            <button onclick="alert('Button 3 clicked')">3</button>
+            <a href="logout.php">
+              <button>Logout</button>
+            </a>
         </div>
     </div>
     <div class="card">
@@ -42,14 +48,21 @@ $userRole = isset($_SESSION['role']) && isset($roleMapping[$_SESSION['role']])
       </div>
       <span><?php echo $_SESSION['username']; ?></span>
       <p class="job"><?php echo $userRole; ?></p>
-      <button> Click
-      </button>
-    </div>
-    <div style="text-align:center; padding:15%;">
-      <a href="logout.php">Logout</a>
-      <br>
-      <br>
-      <a href="raisecr.php">Raise Change Request</a>
+      <?php if ($userRole=="Configuration Manager"): ?>
+        <a href="managecr.php">
+          <button>Manage CR</button>
+        </a>
+      <?php endif; ?>
+      <?php if ($userRole=="Developer"): ?>
+        <a href="checkcr.php">
+          <button>Check assigned CR</button>
+        </a>
+      <?php endif; ?>
+      <?php if ($userRole=="Developer" || $userRole=="Customer Support"): ?>
+        <a href="raisecr.php">
+          <button>Raise New CR</button>
+        </a>
+      <?php endif; ?>
     </div>
 </body>
 </html>
