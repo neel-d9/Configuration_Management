@@ -76,50 +76,49 @@
                 }
 
                 // Add completion status filter if set
-                                // Add completion status filter if set
-                                if (isset($_GET['completion_status']) && $_GET['completion_status'] != '') {
-                                    $completion_status = $conn->real_escape_string($_GET['completion_status']);
-                                    $sql .= " AND completion_status = '$completion_status'";
-                                }
-                
-                                // Add cr_type filter if set
-                                if (isset($_GET['cr_type']) && $_GET['cr_type'] != '') {
-                                    $cr_type = $conn->real_escape_string($_GET['cr_type']);
-                                    $sql .= " AND cr_type = '$cr_type'";
-                                }
-                
-                                // Add cr_priority filter if set
-                                if (isset($_GET['cr_priority']) && $_GET['cr_priority'] != '') {
-                                    $cr_priority = $conn->real_escape_string($_GET['cr_priority']);
-                                    $sql .= " AND cr_priority = '$cr_priority'";
-                                }
-                
-                                $result = $conn->query($sql);
-                
-                                if ($result->num_rows > 0) {
-                                    // Output data of each row
-                                    while($row = $result->fetch_assoc()) {
-                                        echo "<tr>
-                                                <td>{$row['id']}</td>
-                                                <td>{$row['title']}</td>
-                                                <td>{$row['description']}</td>
-                                                <td>{$row['raised_by']}</td>
-                                                <td>{$row['raise_time']}</td>
-                                                <td>{$row['status']}</td>
-                                                <td>{$row['assign_time']}</td>
-                                                <td>{$row['assigned_to']}</td>
-                                                <td>{$row['completion_status']}</td>
-                                                <td>{$row['cr_type']}</td>
-                                                <td>{$row['cr_priority']}</td>
-                                              </tr>";
-                                    }
-                                } else {
-                                    echo "<tr><td colspan='11'>No records found</td></tr>";
-                                }
-                                $conn->close();
-                                ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </body>
-                </html>
+                if (isset($_GET['completion_status']) && $_GET['completion_status'] != '') {
+                    $completion_status = $conn->real_escape_string($_GET['completion_status']);
+                    $sql .= " AND completion_status = '$completion_status'";
+                }
+
+                // Add cr_type filter if set
+                if (isset($_GET['cr_type']) && $_GET['cr_type'] != '') {
+                    $cr_type = $conn->real_escape_string($_GET['cr_type']);
+                    $sql .= " AND cr_type = '$cr_type'";
+                }
+
+                // Add cr_priority filter if set
+                if (isset($_GET['cr_priority']) && $_GET['cr_priority'] != '') {
+                    $cr_priority = $conn->real_escape_string($_GET['cr_priority']);
+                    $sql .= " AND cr_priority = '$cr_priority'";
+                }
+
+                $result = $conn->query($sql);
+
+                if ($result->num_rows > 0) {
+                    // Output data of each row
+                    while($row = $result->fetch_assoc()) {
+                        echo "<tr>
+                                <td>{$row['id']}</td>
+                                <td>{$row['title']}</td>
+                                <td>{$row['description']}</td>
+                                <td>{$row['raised_by']}</td>
+                                <td>{$row['raise_time']}</td>
+                                <td>{$row['status']}</td>
+                                <td>{$row['assign_time']}</td>
+                                <td>{$row['assigned_to']}</td>
+                                <td>{$row['completion_status']}</td>
+                                <td>{$row['cr_type']}</td>
+                                <td>{$row['cr_priority']}</td>
+                              </tr>";
+                    }
+                } else {
+                    echo "<tr><td colspan='11'>No records found</td></tr>";
+                }
+                $conn->close();
+                ?>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
