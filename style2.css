@@ -63,11 +63,20 @@ option {
     padding: 20px 45px 20px 32px;
 }
 
+.index-name{
+    font-size: 50px;
+    text-align: center;
+    margin: 20px 0;
+    font-family: "Bokor", system-ui;
+    color:rgb(20, 44, 0);
+}
+
 .form-title{
     font-size: 36px;
     text-align: center;
     margin: 30px 0;
 }
+
 input{
     color:inherit;
     width:100%;
@@ -201,13 +210,18 @@ a {
   }
   
   .card .img {
-    width: 70px;
-    height: 70px;
-    background: #e8e8e8;
-    border-radius: 100%;
-    margin: auto;
-    margin-top: 20px;
-  }
+    display: flex;
+    justify-content: center; 
+    margin-top: 15px; 
+}
+
+.card .img .profile-pic {
+    width: 100px; 
+    height: 100px;
+    border-radius: 50%; 
+    object-fit: cover; 
+    border: 2px solid #ddd;
+}
   
   .card button {
     padding: 8px 25px;

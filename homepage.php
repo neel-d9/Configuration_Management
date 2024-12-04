@@ -45,6 +45,7 @@ $userRole = isset($_SESSION['role']) && isset($roleMapping[$_SESSION['role']])
       <div class="card-border-top">
       </div>
       <div class="img">
+        <img src="profilepic.jpg" alt="Profile Picture" class="profile-pic">
       </div>
       <span><?php echo $_SESSION['username']; ?></span>
       <p class="job"><?php echo $userRole; ?></p>
