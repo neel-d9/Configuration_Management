@@ -44,10 +44,12 @@
                 <option value="medium" <?php if (isset($_GET['cr_priority']) && $_GET['cr_priority'] == 'medium') echo 'selected'; ?>>Medium</option>
                 <option value="high" <?php if (isset($_GET['cr_priority']) && $_GET['cr_priority'] == 'high') echo 'selected'; ?>>High</option>
             </select>
-
+            <br>
+            <br>
             <label for="title_search">Search by Title:</label>
             <input type="text" name="title_search" id="title_search" value="<?php if (isset($_GET['title_search'])) echo htmlspecialchars(trim($_GET['title_search'])); ?>" placeholder="Search by Title">
-
+            <br>
+            <br>
             <label for="description_search">Search by Description:</label>
             <input type="text" name="description_search" id="description_search" value="<?php if (isset($_GET['description_search'])) echo htmlspecialchars(trim($_GET['description_search'])); ?>" placeholder="Search by Description">
 

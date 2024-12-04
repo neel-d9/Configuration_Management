@@ -18,9 +18,10 @@
             <form method="post" action="register.php">
                 <div class="input-group">
                     <i class="fa-solid fa-user"></i>
-                    <input type="username" name="username" id="username" placeholder="Username" required>
+                    <input type="username" name="username" id="username" placeholder="Username" required> 
                 </div>
                 <br>
+                <!--- test --->
                 <div class="input-group">
                     <i class="fas fa-lock"></i>
                     <input type="password" name="password" id="password" placeholder="Password" required>
