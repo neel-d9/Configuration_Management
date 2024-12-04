@@ -44,17 +44,53 @@
                 <option value="medium" <?php if (isset($_GET['cr_priority']) && $_GET['cr_priority'] == 'medium') echo 'selected'; ?>>Medium</option>
                 <option value="high" <?php if (isset($_GET['cr_priority']) && $_GET['cr_priority'] == 'high') echo 'selected'; ?>>High</option>
             </select>
-            <br>
-            <br>
+            <br><br>
+
+            <label for="from_date">Start Date:</label>
+            <input type="date" name="from_date" id="from_date" value="<?php if (isset($_GET['from_date'])) echo htmlspecialchars(trim($_GET['from_date'])); ?>">
+
+            <label for="to_date">End Date:</label>
+            <input type="date" name="to_date" id="to_date" value="<?php if (isset($_GET['to_date'])) echo htmlspecialchars(trim($_GET['to_date'])); ?>">
+
+            <br><br>
             <label for="title_search">Search by Title:</label>
             <input type="text" name="title_search" id="title_search" value="<?php if (isset($_GET['title_search'])) echo htmlspecialchars(trim($_GET['title_search'])); ?>" placeholder="Search by Title">
-            <br>
-            <br>
+            <br><br>
             <label for="description_search">Search by Description:</label>
             <input type="text" name="description_search" id="description_search" value="<?php if (isset($_GET['description_search'])) echo htmlspecialchars(trim($_GET['description_search'])); ?>" placeholder="Search by Description">
 
             <button type="submit">Filter</button>
         </form>
+
+        <?php
+        // Initialize error message variable
+        $error_message = "";
+
+        // Handle form submission
+        if ($_SERVER["REQUEST_METHOD"] == "GET") {
+            // Validate dates if both are set
+            if (isset($_GET['from_date']) && isset($_GET['to_date']) && $_GET['from_date'] != '' && $_GET['to_date'] != '') {
+                $from_date = $_GET['from_date'];
+                $to_date = $_GET['to_date'];
+
+                // Create DateTime objects
+                $fromDateTime = new DateTime($from_date);
+                $toDateTime = new DateTime($to_date);
+
+                // Validate the dates
+                if ($toDateTime <= $fromDateTime) {
+                    $error_message = "The 'to' date must be after the 'from' date.";
+                }
+            }
+        }
+        ?>
+
+        <?php
+        // Display error message if any
+        if (!empty($error_message)) {
+            echo "<div style='color: red;'>$error_message</div>";
+        }
+        ?>
 
         <table id="crsTable">
             <thead>
@@ -74,77 +110,89 @@
             </thead>
             <tbody>
                 <?php
-                               // Build the SQL query
-                               $sql = "SELECT * FROM crs WHERE 1=1"; // Assuming 'cr_table' is your table name
+                // Build the SQL query
+                $sql = "SELECT * FROM crs WHERE 1=1"; // Assuming 'crs' is your table name
 
-                               // Add status filter if set
-                               if (isset($_GET['status']) && $_GET['status'] != '') {
-                                   $status = $conn->real_escape_string($_GET['status']);
-                                   $sql .= " AND status = '$status'";
-                               }
-               
-                               // Add completion status filter if set
-                               if (isset($_GET['completion_status']) && $_GET['completion_status'] != '') {
-                                   $completion_status = $conn->real_escape_string($_GET['completion_status']);
-                                   $sql .= " AND completion_status = '$completion_status'";
-                               }
-               
-                               // Add cr_type filter if set
-                               if (isset($_GET['cr_type']) && $_GET['cr_type'] != '') {
-                                   $cr_type = $conn->real_escape_string($_GET['cr_type']);
-                                   $sql .= " AND cr_type = '$cr_type'";
-                               }
-               
-                               // Add cr_priority filter if set
-                               if (isset($_GET['cr_priority']) && $_GET['cr_priority'] != '') {
-                                   $cr_priority = $conn->real_escape_string($_GET['cr_priority']);
-                                   $sql .= " AND cr_priority = '$cr_priority'";
-                               }
-               
-                               // Add title search filter if set
-                               if (isset($_GET['title_search']) && $_GET['title_search'] != '') {
-                                   $title_search = trim($_GET['title_search']);
-                                   $title_search = preg_replace('/[.,\'"“”]/', '', $title_search); // Remove delimiters
-                                   $title_search = preg_replace('/\s+/', ' ', $title_search); // Remove extra spaces
-                                   $title_search = $conn->real_escape_string($title_search);
-                                   $sql .= " AND LOWER(title) LIKE LOWER('%$title_search%')";
-                               }
-               
-                               // Add description search filter if set
-                               if (isset($_GET['description_search']) && $_GET['description_search'] != '') {
-                                   $description_search = trim($_GET['description_search']);
-                                   $description_search = preg_replace('/[.,\'"“”]/', '', $description_search); // Remove delimiters
-                                   $description_search = preg_replace('/\s+/', ' ', $description_search); // Remove extra spaces
-                                   $description_search = $conn->real_escape_string($description_search);
-                                   $sql .= " AND LOWER(description) LIKE LOWER('%$description_search%')";
-                               }
-               
-                               $result = $conn->query($sql);
-               
-                               if ($result->num_rows > 0) {
-                                   // Output data of each row
-                                   while($row = $result->fetch_assoc()) {
-                                       echo "<tr>
-                                               <td>{$row['id']}</td>
-                                               <td>{$row['title']}</td>
-                                               <td>{$row['description']}</td>
-                                               <td>{$row['raised_by']}</td>
-                                               <td>{$row['raise_time']}</td>
-                                               <td>{$row['status']}</td>
-                                               <td>{$row['assign_time']}</td>
-                                               <td>{$row['assigned_to']}</td>
-                                               <td>{$row['completion_status']}</td>
-                                               <td>{$row['cr_type']}</td>
-                                               <td>{$row['cr_priority']}</td>
-                                             </tr>";
-                                   }
-                               } else {
-                                   echo "<tr><td colspan='11'>No records found</td></tr>";
-                               }
-                               $conn->close();
-                               ?>
-                           </tbody>
-                       </table>
-                   </div>
-               </body>
-               </html>
+                // Add status filter if set
+                if (isset($_GET['status']) && $_GET['status'] != '') {
+                    $status = $conn->real_escape_string($_GET['status']);
+                    $sql .= " AND status = '$status'";
+                }
+
+                // Add completion status filter if set
+                if (isset($_GET['completion_status']) && $_GET['completion_status'] != '') {
+                    $completion_status = $conn->real_escape_string($_GET['completion_status']);
+                    $sql .= " AND completion_status = '$completion_status'";
+                }
+
+                // Add cr_type filter if set
+                if (isset($_GET['cr_type']) && $_GET['cr_type'] != '') {
+                    $cr_type = $conn->real_escape_string($_GET['cr_type']);
+                    $sql .= " AND cr_type = '$cr_type'";
+                }
+
+                // Add cr_priority filter if set
+                if (isset($_GET['cr_priority']) && $_GET['cr_priority'] != '') {
+                    $cr_priority = $conn->real_escape_string($_GET['cr_priority']);
+                    $sql .= " AND cr_priority = '$cr_priority'";
+                }
+
+                // Add from_date filter if set and valid
+                if (isset($_GET['from_date']) && $_GET['from_date'] != '' && empty($error_message)) {
+                    $from_date = $conn->real_escape_string($_GET['from_date']);
+                    $sql .= " AND raise_time >= '$from_date'";
+                }
+
+                // Add to_date filter if set and valid
+                if (isset($_GET['to_date']) && $_GET['to_date'] != '' && empty($error_message)) {
+                    $to_date = $conn->real_escape_string($_GET['to_date']);
+                    $sql .= " AND raise_time <= '$to_date'";
+                }
+
+                // Add title search filter if set
+                if (isset($_GET['title_search']) && $_GET['title_search'] != '') {
+                    $title_search = trim($_GET['title_search']);
+                    $title_search = preg_replace('/[.,\'"“”]/', '', $title_search); // Remove delimiters
+                    $title_search = preg_replace('/\s+/', ' ', $title_search); // Remove extra spaces
+                    $title_search = $conn->real_escape_string($title_search);
+                    $sql .= " AND LOWER(title) LIKE LOWER('%$title_search%')";
+                }
+                                // Add description search filter if set
+                                if (isset($_GET['description_search']) && $_GET['description_search'] != '') {
+                                    $description_search = trim($_GET['description_search']);
+                                    $description_search = preg_replace('/[.,\'"“”]/', '', $description_search); // Remove delimiters
+                                    $description_search = preg_replace('/\s+/', ' ', $description_search); // Remove extra spaces
+                                    $description_search = $conn->real_escape_string($description_search);
+                                    $sql .= " AND LOWER(description) LIKE LOWER('%$description_search%')";
+                                }
+                
+                                // Execute the query
+                                $result = $conn->query($sql);
+                
+                                if ($result->num_rows > 0) {
+                                    // Output data of each row
+                                    while($row = $result->fetch_assoc()) {
+                                        echo "<tr>
+                                                <td>{$row['id']}</td>
+                                                <td>{$row['title']}</td>
+                                                <td>{$row['description']}</td>
+                                                <td>{$row['raised_by']}</td>
+                                                <td>{$row['raise_time']}</td>
+                                                <td>{$row['status']}</td>
+                                                <td>{$row['assign_time']}</td>
+                                                <td>{$row['assigned_to']}</td>
+                                                <td>{$row['completion_status']}</td>
+                                                <td>{$row['cr_type']}</td>
+                                                <td>{$row['cr_priority']}</td>
+                                              </tr>";
+                                    }
+                                } else {
+                                    echo "<tr><td colspan='11'>No records found</td></tr>";
+                                }
+                                $conn->close();
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </body>
+                </html>
