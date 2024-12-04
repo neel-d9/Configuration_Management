@@ -157,42 +157,43 @@
                     $title_search = $conn->real_escape_string($title_search);
                     $sql .= " AND LOWER(title) LIKE LOWER('%$title_search%')";
                 }
-                                // Add description search filter if set
-                                if (isset($_GET['description_search']) && $_GET['description_search'] != '') {
-                                    $description_search = trim($_GET['description_search']);
-                                    $description_search = preg_replace('/[.,\'"“”]/', '', $description_search); // Remove delimiters
-                                    $description_search = preg_replace('/\s+/', ' ', $description_search); // Remove extra spaces
-                                    $description_search = $conn->real_escape_string($description_search);
-                                    $sql .= " AND LOWER(description) LIKE LOWER('%$description_search%')";
-                                }
                 
-                                // Execute the query
-                                $result = $conn->query($sql);
-                
-                                if ($result->num_rows > 0) {
-                                    // Output data of each row
-                                    while($row = $result->fetch_assoc()) {
-                                        echo "<tr>
-                                                <td>{$row['id']}</td>
-                                                <td>{$row['title']}</td>
-                                                <td>{$row['description']}</td>
-                                                <td>{$row['raised_by']}</td>
-                                                <td>{$row['raise_time']}</td>
-                                                <td>{$row['status']}</td>
-                                                <td>{$row['assign_time']}</td>
-                                                <td>{$row['assigned_to']}</td>
-                                                <td>{$row['completion_status']}</td>
-                                                <td>{$row['cr_type']}</td>
-                                                <td>{$row['cr_priority']}</td>
-                                              </tr>";
-                                    }
-                                } else {
-                                    echo "<tr><td colspan='11'>No records found</td></tr>";
-                                }
-                                $conn->close();
-                                ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </body>
-                </html>
+                // Add description search filter if set
+                if (isset($_GET['description_search']) && $_GET['description_search'] != '') {
+                    $description_search = trim($_GET['description_search']);
+                    $description_search = preg_replace('/[.,\'"“”]/', '', $description_search); // Remove delimiters
+                    $description_search = preg_replace('/\s+/', ' ', $description_search); // Remove extra spaces
+                    $description_search = $conn->real_escape_string($description_search);
+                    $sql .= " AND LOWER(description) LIKE LOWER('%$description_search%')";
+                }
+
+                // Execute the query
+                $result = $conn->query($sql);
+
+                if ($result->num_rows > 0) {
+                    // Output data of each row
+                    while($row = $result->fetch_assoc()) {
+                        echo "<tr>
+                                <td>{$row['id']}</td>
+                                <td>{$row['title']}</td>
+                                <td>{$row['description']}</td>
+                                <td>{$row['raised_by']}</td>
+                                <td>{$row['raise_time']}</td>
+                                <td>{$row['status']}</td>
+                                <td>{$row['assign_time']}</td>
+                                <td>{$row['assigned_to']}</td>
+                                <td>{$row['completion_status']}</td>
+                                <td>{$row['cr_type']}</td>
+                                <td>{$row['cr_priority']}</td>
+                              </tr>";
+                    }
+                } else {
+                    echo "<tr><td colspan='11'>No records found</td></tr>";
+                }
+                $conn->close();
+                ?>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
