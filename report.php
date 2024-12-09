@@ -111,7 +111,7 @@
             <tbody>
                 <?php
                 // Build the SQL query
-                $sql = "SELECT * FROM crs WHERE 1=1"; // Assuming 'crs' is your table name
+                $sql = "SELECT * FROM crs WHERE 1=1";
 
                 // Add status filter if set
                 if (isset($_GET['status']) && $_GET['status'] != '') {

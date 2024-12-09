@@ -18,6 +18,18 @@ if (isset($_POST['raiseCR'])) {
     header("Location: raisecr.php");
     exit;
 }
+
+$roleMapping = [
+    "config_manager" => "Configuration Manager",
+    "developer" => "Developer",
+    "customer_support" => "Customer Support",
+    ];
+    
+$userRole = isset($_SESSION['role']) && isset($roleMapping[$_SESSION['role']]) 
+    ? $roleMapping[$_SESSION['role']] 
+    : "Unknown Role"; 
+
+include('navbar.php');
 ?>
 
 <!DOCTYPE html>
@@ -28,6 +40,9 @@ if (isset($_POST['raiseCR'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Raise Change Request</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bokor&display=swap" rel="stylesheet">
     <style>
         mark {
             background-color: #0047b3;
@@ -35,7 +50,8 @@ if (isset($_POST['raiseCR'])) {
             color: white;
         }
     </style>
-    <link rel="stylesheet" href="style2.css">
+    <link rel="stylesheet" href="style2.css?v=1.0">
+
 </head>
 
 <body>
