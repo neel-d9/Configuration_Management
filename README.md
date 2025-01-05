@@ -8,5 +8,3 @@ Arkopravo Saha
 Diptoneel De
 
 Srijan Saha
-
-Sauradeep Sikdar
