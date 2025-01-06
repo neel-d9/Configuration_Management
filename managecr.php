@@ -9,12 +9,20 @@ include("connect.php");
 // Update CR when form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $crId = $_POST['id'];
-    $devteam = $_POST['team'];
-    $cr_priority = $_POST['cr_priority'];
-    $stmt = $conn->prepare("UPDATE crs SET status = 'assigned', assigned_to = ?, cr_priority = ? WHERE id = ?");
-    $stmt->bind_param('ssi', $devteam, $cr_priority, $crId);
-    $stmt->execute();
-    $stmt->close();
+    if($_POST['action'] === 'update') {
+        $devteam = $_POST['team'];
+        $cr_priority = $_POST['cr_priority'];
+        $stmt = $conn->prepare("UPDATE crs SET status = 'assigned', assigned_to = ?, cr_priority = ?, assign_time = NOW() WHERE id = ?");
+        $stmt->bind_param('ssi', $devteam, $cr_priority, $crId);
+        $stmt->execute();
+        $stmt->close();
+    }
+    elseif ($_POST['action'] === 'reject') {
+        $stmt = $conn->prepare("DELETE FROM crs WHERE id = ?");
+        $stmt->bind_param('i', $crId);
+        $stmt->execute();
+        $stmt->close();
+    }
 }
 
 // Fetch all CRs from the database
@@ -78,7 +86,8 @@ $devqueries->close();
                             </td>
                             <td>
                                 <input type="hidden" name="id" value="<?= htmlspecialchars($cr['id']) ?>">
-                                <button type="submit">Update</button>
+                                <button type="submit" name="action" value="update">Update</button><br>
+                                <button type="submit" name="action" value="reject" formnovalidate>Reject</button>
                             </td>
                         </form>
                     </tr>
