@@ -11,7 +11,7 @@
     <div class="container">
         <h1>CR Management Dashboard</h1>
 
-        <!-- Filter Form -->
+       
         <form method="GET" action="">
             <label for="status">Status:</label>
             <select name="status" id="status">
@@ -63,30 +63,30 @@
         </form>
 
         <?php
-        // Initialize error message variable
+        
         $error_message = "";
 
-        // Handle form submission
+        
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
-            // Validate dates if both are set
+           
             if (isset($_GET['from_date']) && isset($_GET['to_date']) && $_GET['from_date'] != '' && $_GET['to_date'] != '') {
                 $from_date = $_GET['from_date'];
                 $to_date = $_GET['to_date'];
 
-                // Create DateTime objects
+                
                 $fromDateTime = new DateTime($from_date);
                 $toDateTime = new DateTime($to_date);
 
-                // Validate the dates
+                
                 if ($toDateTime <= $fromDateTime) {
-                    $error_message = "The 'to' date must be after the 'from' date.";
+                    $error_message = "The 'End' date must be after the 'Start' date.";
                 }
             }
         }
         ?>
 
         <?php
-        // Display error message if any
+        
         if (!empty($error_message)) {
             echo "<div style='color: red;'>$error_message</div>";
         }
@@ -110,68 +110,68 @@
             </thead>
             <tbody>
                 <?php
-                // Build the SQL query
+                
                 $sql = "SELECT * FROM crs WHERE 1=1";
 
-                // Add status filter if set
+                
                 if (isset($_GET['status']) && $_GET['status'] != '') {
                     $status = $conn->real_escape_string($_GET['status']);
                     $sql .= " AND status = '$status'";
                 }
 
-                // Add completion status filter if set
+               
                 if (isset($_GET['completion_status']) && $_GET['completion_status'] != '') {
                     $completion_status = $conn->real_escape_string($_GET['completion_status']);
                     $sql .= " AND completion_status = '$completion_status'";
                 }
 
-                // Add cr_type filter if set
+                
                 if (isset($_GET['cr_type']) && $_GET['cr_type'] != '') {
                     $cr_type = $conn->real_escape_string($_GET['cr_type']);
                     $sql .= " AND cr_type = '$cr_type'";
                 }
 
-                // Add cr_priority filter if set
+                
                 if (isset($_GET['cr_priority']) && $_GET['cr_priority'] != '') {
                     $cr_priority = $conn->real_escape_string($_GET['cr_priority']);
                     $sql .= " AND cr_priority = '$cr_priority'";
                 }
 
-                // Add from_date filter if set and valid
+                
                 if (isset($_GET['from_date']) && $_GET['from_date'] != '' && empty($error_message)) {
                     $from_date = $conn->real_escape_string($_GET['from_date']);
                     $sql .= " AND raise_time >= '$from_date'";
                 }
 
-                // Add to_date filter if set and valid
+               
                 if (isset($_GET['to_date']) && $_GET['to_date'] != '' && empty($error_message)) {
                     $to_date = $conn->real_escape_string($_GET['to_date']);
                     $sql .= " AND raise_time <= '$to_date'";
                 }
 
-                // Add title search filter if set
+                
                 if (isset($_GET['title_search']) && $_GET['title_search'] != '') {
                     $title_search = trim($_GET['title_search']);
-                    $title_search = preg_replace('/[.,\'"“”]/', '', $title_search); // Remove delimiters
-                    $title_search = preg_replace('/\s+/', ' ', $title_search); // Remove extra spaces
+                    $title_search = preg_replace('/[.,\'"“”]/', '', $title_search); 
+                    $title_search = preg_replace('/\s+/', ' ', $title_search); 
                     $title_search = $conn->real_escape_string($title_search);
                     $sql .= " AND LOWER(title) LIKE LOWER('%$title_search%')";
                 }
                 
-                // Add description search filter if set
+                
                 if (isset($_GET['description_search']) && $_GET['description_search'] != '') {
                     $description_search = trim($_GET['description_search']);
-                    $description_search = preg_replace('/[.,\'"“”]/', '', $description_search); // Remove delimiters
-                    $description_search = preg_replace('/\s+/', ' ', $description_search); // Remove extra spaces
+                    $description_search = preg_replace('/[.,\'"“”]/', '', $description_search); 
+                    $description_search = preg_replace('/\s+/', ' ', $description_search);
                     $description_search = $conn->real_escape_string($description_search);
                     $sql .= " AND LOWER(description) LIKE LOWER('%$description_search%')";
                 }
 
-                // Execute the query
+                
                 $result = $conn->query($sql);
 
                 if ($result->num_rows > 0) {
-                    // Output data of each row
+                    
                     while($row = $result->fetch_assoc()) {
                         echo "<tr>
                                 <td>{$row['id']}</td>
