@@ -76,6 +76,7 @@ $devqueries->close();
                             </td>
                             <td>
                                 <select name="cr_priority" required>
+                                    <option value="">Select Priority</option>
                                     <option value="high" <?= $cr['cr_priority'] === 'high' ? 'selected' : '' ?>>High</option>
                                     <option value="medium" <?= $cr['cr_priority'] === 'medium' ? 'selected' : '' ?>>Medium</option>
                                     <option value="low" <?= $cr['cr_priority'] === 'low' ? 'selected' : '' ?>>Low</option>
