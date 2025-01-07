@@ -1,42 +1,42 @@
-CREATE DATABASE `cr_management`;
-USE `cr_management`;
+CREATE DATABASE cr_management;
+USE cr_management;
 
-CREATE TABLE `users` (
-  `id` int(11) NOT NULL,
-  `username` varchar(50) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `role` enum('developer','config_manager','customer_support') NOT NULL
+CREATE TABLE users (
+  id int(11) NOT NULL,
+  username varchar(50) NOT NULL,
+  password varchar(255) NOT NULL,
+  role enum('developer','config_manager','customer_support') NOT NULL
 );
 
-INSERT INTO `users` (`id`, `username`, `password`, `role`) VALUES
+INSERT INTO users (id, username, password, role) VALUES
 (1, 'admin', 'adminpass', 'config_manager'),
 (2, 'dev1', 'dev1pass', 'developer'),
 (3, 'dev2', 'dev2pass', 'developer'),
 (4, 'support1', 'supportpass', 'customer_support'),
 (5, 'support2', 'supportpass', 'customer_support');
 
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `username` (`username`);
+ALTER TABLE users
+  ADD PRIMARY KEY (id),
+  ADD UNIQUE KEY username (username);
 
-ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+ALTER TABLE users
+  MODIFY id int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
-CREATE TABLE `crs` (
-  `id` int(11) NOT NULL,
-  `title` varchar(100) NOT NULL,
+CREATE TABLE crs (
+  id int(11) NOT NULL,
+  title varchar(100) NOT NULL,
   description text DEFAULT NULL,
-  `raised_by` varchar(50) NOT NULL,
-  `raise_time` timestamp NOT NULL DEFAULT current_timestamp(),
+  raised_by varchar(50) NOT NULL,
+  raise_time timestamp NOT NULL DEFAULT current_timestamp(),
   status enum('unassigned','assigned','in_progress','completed') DEFAULT 'unassigned',
-  `assign_time` timestamp NULL DEFAULT NULL,
-  `assigned_to` varchar(50) DEFAULT NULL,
-  `completion_status` enum('pending','completed') DEFAULT 'pending',
-  `cr_type` varchar(100) DEFAULT NULL,
-  `cr_priority` varchar(100) DEFAULT NULL
+  assign_time timestamp NULL DEFAULT NULL,
+  assigned_to varchar(50) DEFAULT NULL,
+  completion_status enum('pending','completed') DEFAULT 'pending',
+  cr_type varchar(100) DEFAULT NULL,
+  cr_priority varchar(100) DEFAULT NULL
 );
 
-INSERT INTO crs (`id`, `title`, `description`, `raised_by`, `raise_time`, `status`, `assign_time`, `assigned_to`, `completion_status`, `cr_type`, `cr_priority`) VALUES
+INSERT INTO crs (id, title, description, raised_by, raise_time, status, assign_time, assigned_to, completion_status, cr_type, cr_priority) VALUES
 (1, 'Fix Login Bug', 'Users unable to log in with valid credentials', 'support1', '2024-03-15 03:00:00', 'assigned', '2024-03-16 03:30:00', 'dev1', 'pending', 'bug', 'high'),
 (2, 'Fix Session Timeout Bug', 'User sessions expire too quickly', 'support1', '2024-03-28 03:15:00', 'assigned', '2024-03-29 03:45:00', 'dev2', 'pending', 'bug', 'high'),
 (3, 'Add Dark Mode', 'Implement dark mode for UI', 'support2', '2024-04-12 05:30:00', 'unassigned', NULL, NULL, 'pending', 'feature', NULL),
@@ -53,8 +53,8 @@ INSERT INTO crs (`id`, `title`, `description`, `raised_by`, `raise_time`, `statu
 (14, 'Add Notification System', 'Notify users about CR updates', 'support2', '2024-10-15 10:15:00', 'unassigned', NULL, NULL, 'pending', 'feature', NULL),
 (15, 'Enhance Data Validation Rules', 'Add stricter validation for user inputs', 'dev2', '2024-10-22 07:40:00', 'unassigned', NULL, NULL, 'pending', 'improvement', NULL);
 
-ALTER TABLE `crs`
+ALTER TABLE crs
   ADD PRIMARY KEY (id);
 
-ALTER TABLE `crs`
+ALTER TABLE crs
   MODIFY id int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
