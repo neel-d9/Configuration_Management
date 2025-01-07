@@ -55,7 +55,7 @@ include('navbar.php');
 </head>
 
 <body>
-    <div class="container" id="raiseCR">
+    <div class="small-container" id="raiseCR">
         <h1 class="form-title">Raise CR</h1>
         <form method="post" action=""> 
             <div class="input-group">

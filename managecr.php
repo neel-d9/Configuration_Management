@@ -5,6 +5,22 @@ if (!isset($_SESSION['username'])) {
     exit;
 }
 include("connect.php");
+$roleMapping = [
+    "config_manager" => "Configuration Manager",
+    "developer" => "Developer",
+    "customer_support" => "Customer Support",
+];
+
+$userRole = isset($_SESSION['role']) && isset($roleMapping[$_SESSION['role']]) 
+      ? $roleMapping[$_SESSION['role']] 
+      : "Unknown Role"; 
+
+include('navbar.php');
+
+if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'config_manager') {
+    header("Location: index.php");
+    exit;
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $crId = $_POST['id'];
@@ -41,11 +57,15 @@ $devqueries->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Change Request</title>
-    <link rel="stylesheet" href="styles.css">    
+    <link rel="stylesheet" href="style2.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bokor&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
-    <h1>Assign Change Requests</h1>
+    <h1 class="form-title">Assign Change Requests</h1>
+        <?php if (count($crs) > 0): ?>
         <table>
             <thead>
                 <tr>
@@ -84,14 +104,17 @@ $devqueries->close();
                             </td>
                             <td>
                                 <input type="hidden" name="id" value="<?= htmlspecialchars($cr['id']) ?>">
-                                <button type="submit" name="action" value="update">Update</button><br>
-                                <button type="submit" name="action" value="reject" formnovalidate>Reject</button>
+                                <button type="submit" class="table-btn" name="action" value="update">Update</button>
+                                <button type="submit" class="table-btn" name="action" value="reject" formnovalidate>Reject</button>
                             </td>
                         </form>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
+        <?php else: ?>
+            <p>No unassigned CRs.</p>
+        <?php endif; ?>
     </div>
 </body>
 </html>

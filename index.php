@@ -15,7 +15,7 @@
 <body>
     <div class="login-form-container">
         <h1 class="index-name">Alpine Technologies</h1>
-        <div class="container" id="signIn">
+        <div class="small-container" id="signIn">
             <h1 class="form-title">Sign In</h1>
             <form method="post" action="register.php">
                 <div class="input-group">

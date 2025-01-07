@@ -70,12 +70,12 @@ $result = $stmt->get_result();
                                     <form method="POST" action="mark_inprogress.php">
                                         <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
                                         <input type="hidden" name="status" value="in_progress">
-                                        <button type="submit">Mark as In Progress</button>
+                                        <button type="submit" class="table-btn">Mark as In Progress</button>
                                     </form>
                                 <?php elseif ($row['status'] === 'in_progress'): ?>
                                     <form method="POST" action="mark_completed.php">
                                         <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
-                                        <button type="submit">Mark as Completed</button>
+                                        <button type="submit" class="table-btn">Mark as Completed</button>
                                     </form>
                                 <?php endif; ?>
                             </td>

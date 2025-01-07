@@ -25,14 +25,24 @@ body{
 
 
 .container{
+    width: 1200px;
+    background: transparent;
+    margin: 100px auto;
+    border: 2px solid rgba(255, 255, 255, .2);
+    color: white;
+    border-radius: 12px;
+    padding: 30px 40px;
+    backdrop-filter: blur(10px);
+}
+
+.small-container{
     width: 420px;
     background:transparent;
     border: 2px solid rgba(255, 255, 255, .2);
     color: white;
     border-radius: 12px;
     padding: 30px 40px;
-   
-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
 }
 
 select {
@@ -125,6 +135,33 @@ input::placeholder{
     font-size: 16px;
     color: #333;
     font-weight: 600;
+}
+
+.table-btn{
+    width: 100%; /* Keeps the button filling the cell's width */
+    height: 25px; /* Button height */
+    background: white; /* Button background */
+    border: none;
+    outline: none;
+    border-radius: 5px; /* Reduced border radius for a more rectangular look */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for aesthetics */
+    cursor: pointer; /* Indicates the button is clickable */
+    font-size: 16px; /* Font size for text */
+    color: #333; /* Text color */
+    font-weight: 600; /* Bold text */
+    margin-bottom: 10px; /* Adds vertical spacing between buttons */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth hover effect */
+}
+
+/* Last button in the cell should have no margin */
+td .table-btn:last-child {
+    margin-bottom: 0;
+}
+
+/* Hover effect */
+.table-btn:hover {
+    background: #333; /* Darker background */
+    color: white; /* White text */
 }
 
 .c404btn{
@@ -344,4 +381,30 @@ a {
 
 .navbar .nav-buttons button:hover {
     background-color: #35520d; /* Darker shade on hover */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background: transparent;
+    color: white;
+}
+/*
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}*/
+
+tr:hover {
+    background: transparent;
+    color: white;
 }
