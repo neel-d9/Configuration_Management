@@ -1,0 +1,3 @@
+Platforms used: VSCode, Github, XAMPP Control Panel
+Database used: MyDQL
+Website designed using HTML, CSS and PHP
