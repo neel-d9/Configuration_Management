@@ -19,8 +19,8 @@ $userRole = isset($_SESSION['role']) && isset($roleMapping[$_SESSION['role']])
 include('navbar.php');
 
 $username = $_SESSION['username'];
-$profilePicPath = "pfps/$username.jpg";
-$defaultPicPath = "pfps/default.jpg";
+$profilePicPath = "images/$username.jpg";
+$defaultPicPath = "images/default.jpg";
 ?>
 
 
@@ -41,7 +41,7 @@ $defaultPicPath = "pfps/default.jpg";
       </div>
       <div class="img">
         <img src="<?php echo file_exists($profilePicPath) ? $profilePicPath : $defaultPicPath; ?>"
-        alt="Profile Picture" class="profile-pic">
+        alt="Profile Picture Error" class="profile-pic">
       </div>
       <span><?php echo $_SESSION['username']; ?></span>
       <p class="job"><?php echo $userRole; ?></p>
