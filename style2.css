@@ -47,8 +47,8 @@ body{
 }
 
 select {
-    width: 40%;
-    height: 25px;
+    width: 100%;
+    height: 17%;
     background: transparent;
     position: relative;
     border: none;
@@ -461,4 +461,87 @@ tr:hover {
 
 .card-body p {
     margin: 0;
+}
+
+.form-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two columns */
+    grid-gap: 20px; /* Space between items */
+    max-width: 900px; /* Optional: adjust width of the container */
+    margin: 0 auto; /* Center the container */
+}
+
+/* Ensure labels align properly */
+.form-container label {
+    font-size: 16px;
+    color: white;
+    display: inline-block;
+    margin-right: 10px;
+    text-align: center; /* Centers text inside the label */
+    width: 100%; /* Make the label take up full width */
+    margin-bottom: 5px; /* Optional: space between label and select */
+    display: flex;
+    justify-content: center; /* Centers the label text */
+    align-items: center; /* Vertically centers text */
+}
+
+/* Scoped style for the select dropdowns inside .form-container */
+.form-container select,
+.form-container input[type="date"],
+.form-container input[type="text"] {
+    width: 100%; /* Makes select span the full width of its container */
+    height: 35px;
+    background: transparent;
+    border: 2px solid rgba(255, 255, 255, .2);
+    border-radius: 40px;
+    font-size: 15px;
+    color: white;
+    padding: 5px 45px 5px 32px;
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 25px;
+    margin-bottom: 10px;
+}
+
+/* Option styles scoped within .form-container */
+.form-container option {
+    background: transparent;
+    border: none;
+    font-size: 15px;
+    color: rgb(4, 0, 0);
+    padding: 5px 0;
+    text-align: center;
+}
+
+/* Flexbox styling for form group inside .form-container */
+.form-container .form-group {
+    display: flex;
+    flex-direction: column; /* Stack label and input/select vertically */
+    align-items: flex-start; /* Align label and input/select to the left */
+    justify-content: flex-start;
+}
+
+/* Styling for the submit button container */
+.form-container .submit-group {
+    display: flex;
+    justify-content: center; /* Centers the button horizontally */
+    grid-column: span 2; /* Make the submit button span both columns if needed */
+}
+
+/* Styling for the submit button */
+.report-btn {
+    background-color: #4CAF50; /* Green background color */
+    color: white; /* White text color */
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 40px; /* Round edges */
+    cursor: pointer;
+    text-align: center;
+    width: 25%;
+}
+
+/* Hover effect for submit button */
+.report-btn:hover {
+    background-color: yellowgreen; /* Darker green when hovered */
 }

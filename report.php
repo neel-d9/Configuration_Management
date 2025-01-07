@@ -1,4 +1,23 @@
-<?php include 'connect.php'; ?>
+<?php
+session_start();
+if (!isset($_SESSION['username'])) {
+    header("Location: index.php");
+    exit;
+}
+include("connect.php");
+
+$roleMapping = [
+    "config_manager" => "Configuration Manager",
+    "developer" => "Developer",
+    "customer_support" => "Customer Support",
+];
+
+$userRole = isset($_SESSION['role']) && isset($roleMapping[$_SESSION['role']]) 
+      ? $roleMapping[$_SESSION['role']] 
+      : "Unknown Role"; 
+
+include("navbar.php");
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,53 +32,70 @@
 
        
         <form method="GET" action="">
-            <label for="status">Status:</label>
-            <select name="status" id="status">
-                <option value="">All</option>
-                <option value="unassigned" <?php if (isset($_GET['status']) && $_GET['status'] == 'unassigned') echo 'selected'; ?>>Unassigned</option>
-                <option value="assigned" <?php if (isset($_GET['status']) && $_GET['status'] == 'assigned') echo 'selected'; ?>>Assigned</option>
-                <option value="in_progress" <?php if (isset($_GET['status']) && $_GET['status'] == 'in_progress') echo 'selected'; ?>>In Progress</option>
-                <option value="completed" <?php if (isset($_GET['status']) && $_GET['status'] == 'completed') echo 'selected'; ?>>Completed</option>
-            </select>
+            <div class="form-container">
+                <div class="form-group">
+                    <label for="status">Status:</label>
+                    <select name="status" id="status">
+                        <option value="">All</option>
+                        <option value="unassigned" <?php if (isset($_GET['status']) && $_GET['status'] == 'unassigned') echo 'selected'; ?>>Unassigned</option>
+                        <option value="assigned" <?php if (isset($_GET['status']) && $_GET['status'] == 'assigned') echo 'selected'; ?>>Assigned</option>
+                        <option value="in_progress" <?php if (isset($_GET['status']) && $_GET['status'] == 'in_progress') echo 'selected'; ?>>In Progress</option>
+                        <option value="completed" <?php if (isset($_GET['status']) && $_GET['status'] == 'completed') echo 'selected'; ?>>Completed</option>
+                    </select>
+                </div>
 
-            <label for="completion_status">Completion Status:</label>
-            <select name="completion_status" id="completion_status">
-                <option value="">All</option>
-                <option value="pending" <?php if (isset($_GET['completion_status']) && $_GET['completion_status'] == 'pending') echo 'selected'; ?>>Pending</option>
-                <option value="completed" <?php if (isset($_GET['completion_status']) && $_GET['completion_status'] == 'completed') echo 'selected'; ?>>Completed</option>
-            </select>
+                <div class="form-group">
+                    <label for="completion_status">Completion Status:</label>
+                    <select name="completion_status" id="completion_status">
+                        <option value="">All</option>
+                        <option value="pending" <?php if (isset($_GET['completion_status']) && $_GET['completion_status'] == 'pending') echo 'selected'; ?>>Pending</option>
+                        <option value="completed" <?php if (isset($_GET['completion_status']) && $_GET['completion_status'] == 'completed') echo 'selected'; ?>>Completed</option>
+                    </select>
+                </div>
 
-            <label for="cr_type">Type:</label>
-            <select name="cr_type" id="cr_type">
-                <option value="">All</option>
-                <option value="bug" <?php if (isset($_GET['cr_type']) && $_GET['cr_type'] == 'bug') echo 'selected'; ?>>Bug</option>
-                <option value="feature" <?php if (isset($_GET['cr_type']) && $_GET['cr_type'] == 'feature') echo 'selected'; ?>>Feature</option>
-                <option value="improvement" <?php if (isset($_GET['cr_type']) && $_GET['cr_type'] == 'improvement') echo 'selected'; ?>>Improvement</option>
-            </select>
+                <div class="form-group">
+                    <label for="cr_type">Type:</label>
+                    <select name="cr_type" id="cr_type">
+                        <option value="">All</option>
+                        <option value="bug" <?php if (isset($_GET['cr_type']) && $_GET['cr_type'] == 'bug') echo 'selected'; ?>>Bug</option>
+                        <option value="feature" <?php if (isset($_GET['cr_type']) && $_GET['cr_type'] == 'feature') echo 'selected'; ?>>Feature</option>
+                        <option value="improvement" <?php if (isset($_GET['cr_type']) && $_GET['cr_type'] == 'improvement') echo 'selected'; ?>>Improvement</option>
+                    </select>
+                </div>
 
-            <label for="cr_priority">Priority:</label>
-            <select name="cr_priority" id="cr_priority">
-                <option value="">All</option>
-                <option value="low" <?php if (isset($_GET['cr_priority']) && $_GET['cr_priority'] == 'low') echo 'selected'; ?>>Low</option>
-                <option value="medium" <?php if (isset($_GET['cr_priority']) && $_GET['cr_priority'] == 'medium') echo 'selected'; ?>>Medium</option>
-                <option value="high" <?php if (isset($_GET['cr_priority']) && $_GET['cr_priority'] == 'high') echo 'selected'; ?>>High</option>
-            </select>
-            <br><br>
+                <div class="form-group">
+                    <label for="cr_priority">Priority:</label>
+                    <select name="cr_priority" id="cr_priority">
+                        <option value="">All</option>
+                        <option value="low" <?php if (isset($_GET['cr_priority']) && $_GET['cr_priority'] == 'low') echo 'selected'; ?>>Low</option>
+                        <option value="medium" <?php if (isset($_GET['cr_priority']) && $_GET['cr_priority'] == 'medium') echo 'selected'; ?>>Medium</option>
+                        <option value="high" <?php if (isset($_GET['cr_priority']) && $_GET['cr_priority'] == 'high') echo 'selected'; ?>>High</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="from_date">Start Date:</label>
+                    <input type="date" name="from_date" id="from_date" value="<?php if (isset($_GET['from_date'])) echo htmlspecialchars(trim($_GET['from_date'])); ?>">
+                </div>
 
-            <label for="from_date">Start Date:</label>
-            <input type="date" name="from_date" id="from_date" value="<?php if (isset($_GET['from_date'])) echo htmlspecialchars(trim($_GET['from_date'])); ?>">
+                <div class="form-group">
+                    <label for="to_date">End Date:</label>
+                    <input type="date" name="to_date" id="to_date" value="<?php if (isset($_GET['to_date'])) echo htmlspecialchars(trim($_GET['to_date'])); ?>">
+                </div>
 
-            <label for="to_date">End Date:</label>
-            <input type="date" name="to_date" id="to_date" value="<?php if (isset($_GET['to_date'])) echo htmlspecialchars(trim($_GET['to_date'])); ?>">
+                <div class="form-group">
+                    <label for="title_search">Search by Title:</label>
+                    <input type="text" name="title_search" id="title_search" value="<?php if (isset($_GET['title_search'])) echo htmlspecialchars(trim($_GET['title_search'])); ?>" placeholder="Search by Title">
+                </div>
 
-            <br><br>
-            <label for="title_search">Search by Title:</label>
-            <input type="text" name="title_search" id="title_search" value="<?php if (isset($_GET['title_search'])) echo htmlspecialchars(trim($_GET['title_search'])); ?>" placeholder="Search by Title">
-            <br><br>
-            <label for="description_search">Search by Description:</label>
-            <input type="text" name="description_search" id="description_search" value="<?php if (isset($_GET['description_search'])) echo htmlspecialchars(trim($_GET['description_search'])); ?>" placeholder="Search by Description">
+                <div class="form-group">
+                    <label for="description_search">Search by Description:</label>
+                    <input type="text" name="description_search" id="description_search" value="<?php if (isset($_GET['description_search'])) echo htmlspecialchars(trim($_GET['description_search'])); ?>" placeholder="Search by Description">
+                </div>
 
-            <button type="submit">Filter</button>
+                <div class="submit-group">
+                    <button type="submit" class="report-btn">Filter</button>
+                </div>
+            </div>
         </form>
 
         <?php

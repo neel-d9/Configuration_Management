@@ -15,7 +15,7 @@ $userRole = isset($_SESSION['role']) && isset($roleMapping[$_SESSION['role']])
       ? $roleMapping[$_SESSION['role']] 
       : "Unknown Role"; 
 
-include('navbar.php');
+include("navbar.php");
 
 if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'config_manager') {
     header("Location: index.php");
