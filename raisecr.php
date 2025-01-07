@@ -50,7 +50,7 @@ include('navbar.php');
             color: white;
         }
     </style>
-    <link rel="stylesheet" href="style2.css?v=1.0">
+    <link rel="stylesheet" href="styles.css">
 
 </head>
 
