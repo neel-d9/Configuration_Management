@@ -31,6 +31,11 @@ $userRole = isset($_SESSION['role']) && isset($roleMapping[$_SESSION['role']])
                 <button>Raise New CR</button>
             </a>
         <?php endif; ?>
+        <?php if ($userRole == "Developer" || $userRole == "Customer Support" || $userRole == "Configuration Manager"): ?>
+            <a href="report.php">
+                <button>View CR Reports</button>
+            </a>
+        <?php endif; ?>
 
         <div class="divider"></div>
 
