@@ -9,7 +9,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>CR Management Dashboard</h1>
+        <h1 class="form-title">CR Management Dashboard</h1>
 
        
         <form method="GET" action="">
