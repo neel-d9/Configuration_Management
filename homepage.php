@@ -4,12 +4,13 @@ if (!isset($_SESSION['username'])) {
     header("Location: index.php");
     exit;
 }
+
 include("connect.php");
 
 $roleMapping = [
-  "config_manager" => "Configuration Manager",
-  "developer" => "Developer",
-  "customer_support" => "Customer Support",
+    "config_manager" => "Configuration Manager",
+    "developer" => "Developer",
+    "customer_support" => "Customer Support",
 ];
 
 $userRole = isset($_SESSION['role']) && isset($roleMapping[$_SESSION['role']]) 
@@ -21,8 +22,51 @@ include('navbar.php');
 $username = $_SESSION['username'];
 $profilePicPath = "images/$username.jpg";
 $defaultPicPath = "images/default.jpg";
-?>
 
+$totalCRs = $completedCRs = $inProgressCRs = $untouchedCRs = $unassignedCRs = $assignedCRs = 0;
+
+if ($userRole === "Customer Support") {
+    $query = "SELECT 
+                 COUNT(*) AS total, 
+                 SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) AS completed,
+                 SUM(CASE WHEN status = 'in_progress' THEN 1 ELSE 0 END) AS in_progress
+              FROM crs 
+              WHERE raised_by = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param('s', $username);
+    $stmt->execute();
+    $stmt->bind_result($totalCRs, $completedCRs, $inProgressCRs);
+    $stmt->fetch();
+    $stmt->close();
+} elseif ($userRole === "Developer") {
+    $query = "SELECT 
+                 COUNT(*) AS total, 
+                 SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) AS completed,
+                 SUM(CASE WHEN status = 'in_progress' THEN 1 ELSE 0 END) AS in_progress,
+                 SUM(CASE WHEN status = 'assigned' THEN 1 ELSE 0 END) AS assigned
+              FROM crs 
+              WHERE assigned_to = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param('s', $username);
+    $stmt->execute();
+    $stmt->bind_result($totalCRs, $completedCRs, $inProgressCRs, $untouchedCRs);
+    $stmt->fetch();
+    $stmt->close();
+} elseif ($userRole === "Configuration Manager") {
+    $query = "SELECT 
+                 SUM(CASE WHEN status = 'unassigned' THEN 1 ELSE 0 END) AS unassigned,
+                 SUM(CASE WHEN status IN ('assigned', 'in_progress') THEN 1 ELSE 0 END) AS assigned,
+                 SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) AS completed
+              FROM crs";
+    $stmt = $conn->prepare($query);
+    $stmt->execute();
+    $stmt->bind_result($unassignedCRs, $assignedCRs, $completedCRs);
+    $stmt->fetch();
+    $stmt->close();
+}
+
+$conn->close();
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -36,30 +80,34 @@ $defaultPicPath = "images/default.jpg";
     <link href="https://fonts.googleapis.com/css2?family=Bokor&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="card">
-      <div class="card-border-top">
-      </div>
-      <div class="img">
-        <img src="<?php echo file_exists($profilePicPath) ? $profilePicPath : $defaultPicPath; ?>"
-        alt="Profile Picture Error" class="profile-pic">
-      </div>
-      <span><?php echo $_SESSION['username']; ?></span>
-      <p class="job"><?php echo $userRole; ?></p>
-      <?php if ($userRole=="Configuration Manager"): ?>
-        <a href="managecr.php">
-          <button>Manage CR</button>
-        </a>
-      <?php endif; ?>
-      <?php if ($userRole=="Developer"): ?>
-        <a href="checkcr.php">
-          <button>Check assigned CR</button>
-        </a>
-      <?php endif; ?>
-      <?php if ($userRole=="Developer" || $userRole=="Customer Support"): ?>
-        <a href="raisecr.php">
-          <button>Raise New CR</button>
-        </a>
-      <?php endif; ?>
+    <div class="big-card">
+        <div class="card-header">
+            <img src="<?php echo file_exists($profilePicPath) ? $profilePicPath : $defaultPicPath; ?>" 
+                 alt="Profile Picture" 
+                 class="profile-pic">
+            <div class="user-info">
+                <h1><?php echo htmlspecialchars($username); ?></h1>
+                <p><?php echo htmlspecialchars($userRole); ?></p>
+            </div>
+        </div>
+        <div class="card-body">
+            <?php if ($userRole === "Customer Support"): ?>
+                <p>Total CRs raised by you: <?php echo $totalCRs; ?></p>
+                <p>Completed CRs raised by you: <?php echo $completedCRs; ?></p>
+                <p>CRs in progress raised by you: <?php echo $inProgressCRs; ?></p>
+            <?php elseif ($userRole === "Developer"): ?>
+                <p>Total CRs assigned to you: <?php echo $totalCRs; ?></p>
+                <p>CRs completed by you: <?php echo $completedCRs; ?></p>
+                <p>Your CRs in progress: <?php echo $inProgressCRs; ?></p>
+                <p>Your untouched CRs: <?php echo $untouchedCRs; ?></p>
+            <?php elseif ($userRole === "Configuration Manager"): ?>
+                <p>Total Unassigned CRs: <?php echo $unassignedCRs; ?></p>
+                <p>Total Assigned CRs: <?php echo $assignedCRs; ?></p>
+                <p>Total Completed CRs: <?php echo $completedCRs; ?></p>
+            <?php else: ?>
+                <p>Role-specific information is not available.</p>
+            <?php endif; ?>
+        </div>
     </div>
 </body>
 </html>
