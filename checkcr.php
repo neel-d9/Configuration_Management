@@ -6,11 +6,12 @@ $roleMapping = [
     "config_manager" => "Configuration Manager",
     "developer" => "Developer",
     "customer_support" => "Customer Support",
-  ];
-  
+];
+
 $userRole = isset($_SESSION['role']) && isset($roleMapping[$_SESSION['role']]) 
       ? $roleMapping[$_SESSION['role']] 
       : "Unknown Role"; 
+
 include('navbar.php');
 
 if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'developer') {
@@ -20,9 +21,9 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'developer') {
 
 $username = $_SESSION['username'];
 
-$query = "SELECT id, title, description, cr_type, cr_priority, completion_status 
+$query = "SELECT id, title, description, cr_type, cr_priority, status 
           FROM crs 
-          WHERE assigned_to = ? AND completion_status = 'pending'";
+          WHERE assigned_to = ? AND status != 'completed'";
 $stmt = $conn->prepare($query);
 $stmt->bind_param('s', $username);
 $stmt->execute();
@@ -65,10 +66,18 @@ $result = $stmt->get_result();
                             <td><?php echo htmlspecialchars($row['cr_type']); ?></td>
                             <td><?php echo htmlspecialchars($row['cr_priority']); ?></td>
                             <td>
-                                <form method="POST" action="mark_completed.php">
-                                    <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
-                                    <button type="submit">Mark as Completed</button>
-                                </form>
+                                <?php if ($row['status'] === 'assigned'): ?>
+                                    <form method="POST" action="mark_inprogress.php">
+                                        <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
+                                        <input type="hidden" name="status" value="in_progress">
+                                        <button type="submit">Mark as In Progress</button>
+                                    </form>
+                                <?php elseif ($row['status'] === 'in_progress'): ?>
+                                    <form method="POST" action="mark_completed.php">
+                                        <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
+                                        <button type="submit">Mark as Completed</button>
+                                    </form>
+                                <?php endif; ?>
                             </td>
                         </tr>
                     <?php endwhile; ?>

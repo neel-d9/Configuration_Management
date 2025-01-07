@@ -7,20 +7,21 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'developer') {
     exit;
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id']) && isset($_POST['status'])) {
     $cr_id = intval($_POST['id']);
+    $new_status = $_POST['status'];
     $username = $_SESSION['username'];
 
     $query = "UPDATE crs 
-              SET status = 'completed', completion_status = 'completed' 
+              SET status = ? 
               WHERE id = ? AND assigned_to = ?";
     $stmt = $conn->prepare($query);
-    $stmt->bind_param('is', $cr_id, $username);
+    $stmt->bind_param('sis', $new_status, $cr_id, $username);
 
     if ($stmt->execute()) {
-        $_SESSION['message'] = "CR marked as completed.";
+        $_SESSION['message'] = "Status updated to '$new_status'.";
     } else {
-        $_SESSION['message'] = "Failed to mark the CR as completed.";
+        $_SESSION['message'] = "Failed to update status.";
     }
 
     $stmt->close();

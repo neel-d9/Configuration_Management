@@ -6,7 +6,6 @@ if (!isset($_SESSION['username'])) {
 }
 include("connect.php");
 
-// Update CR when form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $crId = $_POST['id'];
     if($_POST['action'] === 'update') {
@@ -25,12 +24,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Fetch all CRs from the database
 $result = $conn->query("SELECT id, title, description, assigned_to, cr_priority FROM crs WHERE status='unassigned'");
 $crs = $result->fetch_all(MYSQLI_ASSOC);
 $result->close();
 
-// Define available teams
 $devqueries = $conn->query("SELECT username FROM users WHERE role = 'developer'");
 while ($row = $devqueries->fetch_assoc()) {
     $devteams[] = $row['username'];
