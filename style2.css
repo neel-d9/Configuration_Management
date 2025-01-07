@@ -11,7 +11,7 @@ body{
     align-items: center;
     min-height: 100vh;
   
-    background: url(bg3.jpg) no-repeat;
+    background: url(images/bg3.jpg) no-repeat;
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
