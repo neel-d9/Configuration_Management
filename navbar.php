@@ -13,7 +13,7 @@ $userRole = isset($_SESSION['role']) && isset($roleMapping[$_SESSION['role']])
 
 <div class="navbar">
     <div class="logo">
-        <a href="index.php">Alpine Technologies</a>
+        <a href="homepage.php">Alpine Technologies</a>
     </div>
     <div class="nav-buttons">
         <?php if ($userRole == "Configuration Manager"): ?>
