@@ -17,7 +17,20 @@ $userRole = isset($_SESSION['role']) && isset($roleMapping[$_SESSION['role']])
       : "Unknown Role"; 
 
 include("navbar.php");
+
+$devqueries = $conn->query("SELECT username FROM users WHERE role = 'developer'");
+while ($row = $devqueries->fetch_assoc()) {
+    $devteams[] = $row['username'];
+}
+$devqueries->close();
+
+$raiserqueries = $conn->query("SELECT username FROM users WHERE role = 'developer' OR role = 'customer_support'");
+while ($row = $raiserqueries->fetch_assoc()) {
+    $raiserteams[] = $row['username'];
+}
+$raiserqueries->close();
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -75,6 +88,31 @@ include("navbar.php");
                         <option value="high" <?php if (isset($_GET['cr_priority']) && $_GET['cr_priority'] == 'high') echo 'selected'; ?>>High</option>
                     </select>
                 </div>
+
+                <div class="form-group">
+                    <label for="raised_by">Raised By:</label>
+                    <select name="raised_by" id="raised_by">
+                        <option value="">All</option>
+                        <?php foreach ($raiserteams as $team): ?>
+                            <option value="<?= htmlspecialchars($team) ?>" <?php if (isset($_GET['raised_by']) && $_GET['raised_by'] == '<?= htmlspecialchars($team) ?>') echo 'selected'; ?>>
+                                <?= htmlspecialchars($team) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>  
+
+                <div class="form-group">
+                    <label for="assigned_to">Assigned To:</label>
+                    <select name="assigned_to" id="assigned_to">
+                        <option value="">All</option>
+                        <?php foreach ($devteams as $team): ?>
+                            <option value="<?= htmlspecialchars($team) ?>" <?php if (isset($_GET['assigned_to']) && $_GET['assigned_to'] == "<?= htmlspecialchars($team) ?>") echo 'selected'; ?>>
+                                <?= htmlspecialchars($team) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>  
+
                 <div class="form-group">
                     <label for="from_date">Start Date:</label>
                     <input type="date" name="from_date" id="from_date" value="<?php if (isset($_GET['from_date'])) echo htmlspecialchars(trim($_GET['from_date'])); ?>">
@@ -176,7 +214,17 @@ include("navbar.php");
                     $sql .= " AND cr_priority = '$cr_priority'";
                 }
 
+                if (isset($_GET['raised_by']) && $_GET['raised_by'] != '') {
+                    $raised_by = $conn->real_escape_string($_GET['raised_by']);
+                    $sql .= " AND raised_by = '$raised_by'";
+                }
+
                 
+                if (isset($_GET['assigned_to']) && $_GET['assigned_to'] != '') {
+                    $assigned_to = $conn->real_escape_string($_GET['assigned_to']);
+                    $sql .= " AND assigned_to = '$assigned_to'";
+                }
+
                 if (isset($_GET['from_date']) && $_GET['from_date'] != '' && empty($error_message)) {
                     $from_date = $conn->real_escape_string($_GET['from_date']);
                     $sql .= " AND raise_time >= '$from_date'";
