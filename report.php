@@ -22,13 +22,11 @@ $devqueries = $conn->query("SELECT username FROM users WHERE role = 'developer'"
 while ($row = $devqueries->fetch_assoc()) {
     $devteams[] = $row['username'];
 }
-$devqueries->close();
 
 $raiserqueries = $conn->query("SELECT username FROM users WHERE role = 'developer' OR role = 'customer_support'");
 while ($row = $raiserqueries->fetch_assoc()) {
     $raiserteams[] = $row['username'];
 }
-$raiserqueries->close();
 ?>
 
 <!DOCTYPE html>
@@ -276,7 +274,9 @@ $raiserqueries->close();
                     }
                 } else {
                     echo "<tr><td colspan='11'>No records found</td></tr>";
-                }
+                }   
+                $devqueries->close();
+                $raiserqueries->close();
                 $conn->close();
                 ?>
             </tbody>
