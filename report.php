@@ -92,7 +92,7 @@ while ($row = $raiserqueries->fetch_assoc()) {
                     <select name="raised_by" id="raised_by">
                         <option value="">All</option>
                         <?php foreach ($raiserteams as $team): ?>
-                            <option value="<?= htmlspecialchars($team) ?>" <?php if (isset($_GET['raised_by']) && $_GET['raised_by'] == '<?= htmlspecialchars($team) ?>') echo 'selected'; ?>>
+                            <option value="<?= htmlspecialchars($team) ?>" <?php if (isset($_GET['raised_by']) && $_GET['raised_by'] == $team) echo 'selected'; ?>>
                                 <?= htmlspecialchars($team) ?>
                             </option>
                         <?php endforeach; ?>
@@ -104,7 +104,7 @@ while ($row = $raiserqueries->fetch_assoc()) {
                     <select name="assigned_to" id="assigned_to">
                         <option value="">All</option>
                         <?php foreach ($devteams as $team): ?>
-                            <option value="<?= htmlspecialchars($team) ?>" <?php if (isset($_GET['assigned_to']) && $_GET['assigned_to'] == "<?= htmlspecialchars($team) ?>") echo 'selected'; ?>>
+                            <option value="<?= htmlspecialchars($team) ?>" <?php if (isset($_GET['assigned_to']) && $_GET['assigned_to'] == $team) echo 'selected'; ?>>
                                 <?= htmlspecialchars($team) ?>
                             </option>
                         <?php endforeach; ?>
